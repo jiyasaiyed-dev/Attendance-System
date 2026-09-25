@@ -1,0 +1,54 @@
+{% extends "base.html" %}
+{% block title %}Dashboard{% endblock %}
+{% block content %}
+
+<div class="page-header">
+    <h2>Dashboard</h2>
+    <span style="color:var(--text-light);font-size:13.5px;">Today: {{ today }}</span>
+</div>
+
+<div class="stats-grid">
+    <div class="stat-card stat-blue">
+        <div class="stat-value">{{ total_students }}</div>
+        <div class="stat-label">Total Students</div>
+    </div>
+    <div class="stat-card stat-green">
+        <div class="stat-value">{{ present_today }}</div>
+        <div class="stat-label">Present Today</div>
+    </div>
+    <div class="stat-card stat-red">
+        <div class="stat-value">{{ absent_today }}</div>
+        <div class="stat-label">Absent Today</div>
+    </div>
+</div>
+
+<div class="card">
+    <div class="card-title">🤖 AI Attendance Risk Overview</div>
+    <div class="stats-grid">
+        <div class="stat-card stat-green">
+            <div class="stat-value">{{ risk_counts.get('Good', 0) }}</div>
+            <div class="stat-label">Good Attendance</div>
+        </div>
+        <div class="stat-card stat-orange">
+            <div class="stat-value">{{ risk_counts.get('Average', 0) }}</div>
+            <div class="stat-label">Average Attendance</div>
+        </div>
+        <div class="stat-card stat-red">
+            <div class="stat-value">{{ risk_counts.get('Shortage Risk', 0) }}</div>
+            <div class="stat-label">Shortage Risk</div>
+        </div>
+    </div>
+    <a href="{{ url_for('ai_analysis') }}" class="btn btn-primary btn-sm">View Full AI Analysis</a>
+</div>
+
+<div class="card">
+    <div class="card-title">Quick Actions</div>
+    <div class="flex-gap">
+        <a href="{{ url_for('mark_attendance') }}" class="btn btn-primary">Mark Attendance</a>
+        <a href="{{ url_for('add_student') }}" class="btn btn-success">Add Student</a>
+        <a href="{{ url_for('attendance_reports') }}" class="btn btn-secondary">View Reports</a>
+        <a href="{{ url_for('date_wise_report') }}" class="btn btn-secondary">Date-wise Report</a>
+    </div>
+</div>
+
+{% endblock %}

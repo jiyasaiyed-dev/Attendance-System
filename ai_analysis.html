@@ -1,0 +1,60 @@
+{% extends "base.html" %}
+{% block title %}AI Analysis{% endblock %}
+{% block content %}
+
+<div class="page-header">
+    <h2>🤖 AI-Based Attendance Analysis</h2>
+    <form method="POST" action="{{ url_for('ai_retrain') }}">
+        <button type="submit" class="btn btn-secondary">Retrain Model</button>
+    </form>
+</div>
+
+<div class="card">
+    <div class="card-title">How it works</div>
+    <p style="color:var(--text-light);font-size:14px;line-height:1.6;">
+        A <strong>Decision Tree Classifier</strong> (scikit-learn) is trained on attendance percentage,
+        total classes held, and absent streak length to classify each student as
+        <strong>Good</strong> (≥85%), <strong>Average</strong> (75–84%), or
+        <strong>Shortage Risk</strong> (&lt;75%). This helps faculty proactively identify
+        students who may need attention.
+    </p>
+</div>
+
+<div class="card">
+    <div class="table-wrapper">
+    <table>
+        <thead>
+            <tr>
+                <th>Roll No</th>
+                <th>Name</th>
+                <th>Attendance %</th>
+                <th>Absent Streak</th>
+                <th>AI Prediction</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for r in results %}
+            <tr>
+                <td>{{ r.roll_no }}</td>
+                <td>{{ r.name }}</td>
+                <td>{{ r.percentage }}%</td>
+                <td>{{ r.absent_streak }}</td>
+                <td>
+                    {% if r.risk == 'Good' %}
+                        <span class="badge badge-good">Good</span>
+                    {% elif r.risk == 'Average' %}
+                        <span class="badge badge-average">Average</span>
+                    {% else %}
+                        <span class="badge badge-risk">Shortage Risk</span>
+                    {% endif %}
+                </td>
+            </tr>
+            {% else %}
+            <tr><td colspan="5" class="text-center">No data available.</td></tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    </div>
+</div>
+
+{% endblock %}

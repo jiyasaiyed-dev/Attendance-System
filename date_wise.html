@@ -1,0 +1,51 @@
+{% extends "base.html" %}
+{% block title %}Date-wise Report{% endblock %}
+{% block content %}
+
+<div class="page-header">
+    <h2>Date-wise Attendance Report</h2>
+</div>
+
+<form method="GET" action="{{ url_for('date_wise_report') }}" class="search-bar">
+    <div class="form-group" style="flex:0 0 220px;">
+        <label>Select Date</label>
+        <input type="date" name="date" value="{{ selected_date }}" onchange="this.form.submit()">
+    </div>
+</form>
+
+<div class="card">
+    <div class="table-wrapper">
+    <table>
+        <thead>
+            <tr>
+                <th>Roll No</th>
+                <th>Name</th>
+                <th>Course</th>
+                <th>Status</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for r in records %}
+            <tr>
+                <td>{{ r.roll_no }}</td>
+                <td>{{ r.name }}</td>
+                <td>{{ r.course or '-' }}</td>
+                <td>
+                    {% if r.status == 'Present' %}
+                        <span class="badge badge-present">Present</span>
+                    {% elif r.status == 'Absent' %}
+                        <span class="badge badge-absent">Absent</span>
+                    {% else %}
+                        <span class="badge badge-notmarked">Not Marked</span>
+                    {% endif %}
+                </td>
+            </tr>
+            {% else %}
+            <tr><td colspan="4" class="text-center">No students found.</td></tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    </div>
+</div>
+
+{% endblock %}

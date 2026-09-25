@@ -1,0 +1,69 @@
+{% extends "base.html" %}
+{% block title %}Mark Attendance{% endblock %}
+{% block content %}
+
+<div class="page-header">
+    <h2>Mark Attendance</h2>
+</div>
+
+<form method="GET" action="{{ url_for('mark_attendance') }}" class="search-bar">
+    <div class="form-group" style="flex:0 0 220px;">
+        <label>Select Date</label>
+        <input type="date" name="attendance_date" value="{{ selected_date }}" onchange="this.form.submit()">
+    </div>
+</form>
+
+<div class="card">
+    <form method="POST" action="{{ url_for('mark_attendance') }}">
+        <input type="hidden" name="attendance_date" value="{{ selected_date }}">
+
+        <div class="flex-gap mb-10">
+            <button type="button" class="btn btn-success btn-sm" onclick="setAll('Present')">Mark All Present</button>
+            <button type="button" class="btn btn-danger btn-sm" onclick="setAll('Absent')">Mark All Absent</button>
+        </div>
+
+        <div class="table-wrapper">
+        <table>
+            <thead>
+                <tr>
+                    <th>Roll No</th>
+                    <th>Name</th>
+                    <th>Course</th>
+                    <th>Status</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for s in students %}
+                <tr>
+                    <td>{{ s.roll_no }}</td>
+                    <td>{{ s.name }}</td>
+                    <td>{{ s.course or '-' }}</td>
+                    <td>
+                        <select name="status_{{ s.id }}" class="status-select">
+                            <option value="Present" {% if existing.get(s.id) == 'Present' %}selected{% endif %}>Present</option>
+                            <option value="Absent" {% if existing.get(s.id, 'Absent') == 'Absent' %}selected{% endif %}>Absent</option>
+                        </select>
+                    </td>
+                </tr>
+                {% else %}
+                <tr><td colspan="4" class="text-center">No students available. Please add students first.</td></tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        </div>
+
+        {% if students %}
+        <button type="submit" class="btn btn-primary mt-10">Save Attendance</button>
+        {% endif %}
+    </form>
+</div>
+
+<script>
+function setAll(status) {
+    document.querySelectorAll('.status-select').forEach(function(sel) {
+        sel.value = status;
+    });
+}
+</script>
+
+{% endblock %}

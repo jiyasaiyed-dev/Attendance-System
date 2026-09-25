@@ -1,0 +1,66 @@
+{% extends "base.html" %}
+{% block title %}Student Report{% endblock %}
+{% block content %}
+
+<div class="page-header">
+    <h2>{{ student.name }} ({{ student.roll_no }})</h2>
+    <a href="{{ url_for('students') }}" class="btn btn-secondary">← Back to Students</a>
+</div>
+
+<div class="stats-grid">
+    <div class="stat-card stat-blue">
+        <div class="stat-value">{{ present }}</div>
+        <div class="stat-label">Classes Present</div>
+    </div>
+    <div class="stat-card stat-blue">
+        <div class="stat-value">{{ total }}</div>
+        <div class="stat-label">Total Classes</div>
+    </div>
+    <div class="stat-card {{ 'stat-green' if percentage >= 85 else ('stat-orange' if percentage >= 75 else 'stat-red') }}">
+        <div class="stat-value">{{ percentage }}%</div>
+        <div class="stat-label">Attendance %</div>
+    </div>
+</div>
+
+<div class="card">
+    <div class="card-title">🤖 AI Risk Prediction</div>
+    <p>Based on the Decision Tree model analyzing attendance percentage, total classes, and absent streak:</p>
+    <p class="mt-10">
+        {% if risk == 'Good' %}
+            <span class="badge badge-good">Good</span>
+        {% elif risk == 'Average' %}
+            <span class="badge badge-average">Average</span>
+        {% else %}
+            <span class="badge badge-risk">Shortage Risk</span>
+        {% endif %}
+    </p>
+</div>
+
+<div class="card">
+    <div class="card-title">Attendance History</div>
+    <div class="table-wrapper">
+    <table>
+        <thead>
+            <tr><th>Date</th><th>Status</th></tr>
+        </thead>
+        <tbody>
+            {% for r in records %}
+            <tr>
+                <td>{{ r.attendance_date }}</td>
+                <td>
+                    {% if r.status == 'Present' %}
+                        <span class="badge badge-present">Present</span>
+                    {% else %}
+                        <span class="badge badge-absent">Absent</span>
+                    {% endif %}
+                </td>
+            </tr>
+            {% else %}
+            <tr><td colspan="2" class="text-center">No attendance records yet.</td></tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    </div>
+</div>
+
+{% endblock %}
